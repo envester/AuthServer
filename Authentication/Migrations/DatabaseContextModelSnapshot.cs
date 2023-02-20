@@ -120,15 +120,13 @@ namespace Authentication.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "131d3621-9901-412e-9e3e-c43473ad6960",
-                            ConcurrencyStamp = "705d1274-2a77-42a6-b0b4-b0c7e295e7a5",
+                            Id = "d05ef7c8-14d1-4066-9482-641a7f294bb1",
                             Name = "User",
                             NormalizedName = "User"
                         },
                         new
                         {
-                            Id = "101ae0d3-da3d-4607-8ca5-082eb6e8e727",
-                            ConcurrencyStamp = "ce78f055-aa97-4f95-af66-9494da098376",
+                            Id = "b6186f0f-eebe-4191-b0c6-b2b9a69fecdd",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         });

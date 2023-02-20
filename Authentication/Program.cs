@@ -1,71 +1,45 @@
 using Authentication;
 using Authentication.Configurations;
+using Authentication.Controllers;
 using Authentication.Data;
+using Authentication.Models;
 using Authentication.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
-using Serilog;
-
-
+using Microsoft.Win32;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Serilog
-
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .CreateLogger();
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(logger);
-
-//CORS 
-
 builder.Services.AddCors();
 
-//DB Connection
-
 builder.Services.AddDbContext<DatabaseContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"))
-);
-
-//
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"));
+});
 
 builder.Services.ConfigureIdentity();
 
-//
-
 builder.Services.AddAutoMapper(typeof(MapperInitilizer));
 
-//
-var Configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .Build();
-
-builder.Services.ConfigureJWT(Configuration);
-
-//
+builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 
-// Add services to the container.
-
-
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -74,7 +48,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//CORS Configuration
 app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.UseAuthentication();
@@ -82,5 +55,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+
 
 app.Run();
